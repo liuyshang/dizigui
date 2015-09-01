@@ -1,0 +1,211 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/RL_actionbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_actionbar">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_back"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/text_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/btn_back"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/list_normal"
+            android:textSize="30sp"
+            android:text="返回首页"/>
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/list_normal"
+            android:textSize="40sp"
+            android:text="弟子规"/>
+
+        <TextView
+            android:id="@+id/text_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/list_normal"
+            android:textSize="30sp"
+            android:text="目录"/>
+
+        <ImageView
+            android:id="@+id/btn_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/text_list"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_list"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/RL_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/RL_actionbar"
+        android:background="@drawable/bg_activity">
+
+        <RelativeLayout
+            android:id="@+id/RL_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/bg_content">
+
+        <ImageView
+                android:id="@+id/iv_center"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_centerHorizontal="true"
+                android:background="@color/dizigui"
+                android:visibility="invisible" />
+
+            <RelativeLayout
+                android:id="@+id/RL_leftct"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@id/iv_center">
+
+                <TextView
+                    android:id="@+id/text_zx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="50dp"
+                    android:textColor="@color/explain"
+                    android:textSize="24sp"
+                    android:text="【总叙】"/>
+
+                <!--弟子规-->
+
+                <Button
+                    android:id="@+id/btn_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:background="@drawable/btn_play"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/RL_rightct"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@id/iv_center">
+
+                <TextView
+                    android:id="@+id/text_el"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="70dp"
+                    android:text="解释"
+                    android:textColor="@color/explain"
+                    android:textSize="24sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_pageleft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/page_left"/>
+
+        <Button
+            android:id="@+id/btn_pageright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/page_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/RL_list"
+        android:layout_width="400dp"
+        android:layout_height="590dp"
+        android:layout_marginTop="75dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/bg_list"
+        android:visibility="visible">
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginLeft="10dp"
+            android:scrollbars="none">
+
+        </ListView>
+
+        <ImageView
+            android:id="@+id/seekbar_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_fili_progress" />
+
+        <!--SeekBar-->
+
+        <ImageView
+            android:id="@+id/btn_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekbar_progress"
+            android:layout_marginTop="20dp"
+            android:layout_alignLeft="@id/seekbar_progress"
+            android:src="@drawable/btn_up" />
+
+        <ImageView
+            android:id="@+id/btn_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_up"
+            android:layout_marginTop="30dp"
+            android:layout_alignLeft="@id/seekbar_progress"
+            android:src="@drawable/btn_down" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

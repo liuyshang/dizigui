@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+
+    <!--弟子规 拼音的style-->
+    <style name="dzg_pinyin">
+        <item name="android:textColor">@color/content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <!--弟子规 汉字的style-->
+    <style name="dzg_hanzi">
+        <item name="android:textSize">54sp</item>
+        <item name="android:textColor">@color/dizigui</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--目录颜色-->
+    <color name="list_normal">#d9b38d</color>
+    <color name="list_pressed">#f2d4b6</color>
+
+    <!--“解释”“总叙”颜色-->
+    <color name="explain">#0000ff</color>
+
+    <!--内容的颜色-->
+    <color name="content">#f51a1a1a</color>
+
+    <!--弟子规 颜色-->
+    <color name="dizigui">#8c1c1c</color>
+</resources>

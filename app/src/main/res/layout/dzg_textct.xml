@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/LL_above"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/RL_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pinyin1"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="di" />
+
+            <TextView
+                android:id="@+id/hanzi1"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin1"
+                android:text="弟" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin2"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="zi" />
+
+            <TextView
+                android:id="@+id/hanzi2"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin2"
+                android:text="子" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin3"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="gui" />
+
+            <TextView
+                android:id="@+id/hanzi3"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin3"
+                android:text="规" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/RL_d"
+            style="@style/dzg_hanzi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="，" />
+
+        <RelativeLayout
+            android:id="@+id/RL_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pinyin4"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sheng" />
+
+            <TextView
+                android:id="@+id/hanzi4"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin4"
+                android:text="圣" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin5"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ren" />
+
+            <TextView
+                android:id="@+id/hanzi5"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin5"
+                android:text="人" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin6"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xun" />
+
+            <TextView
+                android:id="@+id/hanzi6"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin6"
+                android:text="训" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL_below"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <RelativeLayout
+            android:id="@+id/RL_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pinyin7"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="shou" />
+
+            <TextView
+                android:id="@+id/hanzi7"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin7"
+                android:text="首" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin8"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xiao" />
+
+            <TextView
+                android:id="@+id/hanzi8"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin8"
+                android:text="孝" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin9"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ti" />
+
+            <TextView
+                android:id="@+id/hanzi9"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin9"
+                android:text="悌" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/RL_h"
+            style="@style/dzg_hanzi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="，" />
+
+        <RelativeLayout
+            android:id="@+id/RL_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pinyin10"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ci" />
+
+            <TextView
+                android:id="@+id/hanzi10"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin10"
+                android:text="次" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin11"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="jin" />
+
+            <TextView
+                android:id="@+id/hanzi11"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin11"
+                android:text="谨" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp">
+
+            <TextView
+                android:id="@+id/pinyin12"
+                style="@style/dzg_pinyin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xin" />
+
+            <TextView
+                android:id="@+id/hanzi12"
+                style="@style/dzg_hanzi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pinyin12"
+                android:text="信" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

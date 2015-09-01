@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--背景图-->
+    <item android:drawable="@drawable/bg_fili_progress" android:id="@+id/background"/>
+    <!--进度图-->
+    <item android:drawable="@drawable/bg_fili_progress" android:id="@+id/progress"/>
+
+</layer-list>
