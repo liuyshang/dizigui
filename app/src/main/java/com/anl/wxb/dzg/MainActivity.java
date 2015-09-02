@@ -1,6 +1,8 @@
 package com.anl.wxb.dzg;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import com.anl.wxb.ability.XmppFunc;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
 public class MainActivity extends AnlActivity implements View.OnTouchListener {
@@ -75,6 +78,15 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     private GestureDetector gestureDetector;
     private boolean left_right = true;  //left true; right false
 
+    private  SharedPreferences share_file;
+    String key = "dzg";
+    /*存储的文件名*/
+    public static final String dzg_name = "dzg";
+    /*存储后的文件路径：/date/data/<package name>/share_prefs + 文件名.xml*/
+    public static final String PATH = "/data/data/com.anl.wxb.dzg/shared_prefs/dzg.xml";
+    public String path_share = "/data/data/com.anl.wxb.dzg/shared_prefs/";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +95,29 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         init();   //初始化
 
-        downData();
+        File file_share = new File(path_share);
+        File file_dzg = new File(path_share + "dzg.xml");
+
+        if(file_share.exists()){
+            if(file_dzg.exists()){
+                Log.e("File","file_share 存在///file_dzg 存在");
+
+                String string = share_file.getString(key,"");
+                setData(string , pagecount);
+
+//                Log.e("File_string",string);
+            }else{
+                Log.e("File","file_share 存在/// file_dzg 不存在");
+
+                downData();
+            }
+        }else{
+            Log.e("File","file_share 不存在");
+
+            downData();
+        }
+
+
     }
 
 //    初始化 xmppfunc,seekbar的thumb位置，左翻按钮初始为隐藏，listview初始为隐藏
@@ -91,6 +125,9 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         Log.e("MainActivity", "init");
 
         XmppFunc.getInstance().openXmpp(getApplicationContext());
+
+//        获取SharePreferences对象
+        share_file = getSharedPreferences(dzg_name, MODE_PRIVATE);
 
         seekbar.setProgress(100);
         btn_pageleft.setVisibility(View.INVISIBLE);
@@ -116,6 +153,8 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
             @Override
             public AjaxCallBack<String> progress(boolean progress, int rate) {
+                Log.e("progress", "rate:" + rate);
+
                 return super.progress(progress, rate);
             }
 
@@ -130,7 +169,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
             public void onLoading(long count, long current) {
                 super.onLoading(count, current);
 
-                Log.e("onLoading", count + "  " + current);
+                Log.e("onLoading", "count:" + count + "  " + "current" + current);
             }
 
             @Override
@@ -142,6 +181,12 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 try {
                     jsonObject = new JSONObject(s);
                     if ("0".equals(jsonObject.getString("code"))) {
+
+                        //      获取Editor对象
+                        SharedPreferences.Editor editor = share_file.edit();
+                        editor.putString(key, s);
+                        editor.apply();
+
                         setData(s, pagecount);
                     }
                 } catch (JSONException e) {
@@ -169,8 +214,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         Log.e("downData", "setData");
 
         dzg = JSON.parseObject(s, DiZiGui.class);
-
-        Log.e("setData", String.valueOf(dzg.getList()));
 
         MyAdapter myAdapter = new MyAdapter(getApplicationContext(), dzg.getList());
         list_view.setAdapter(myAdapter);
