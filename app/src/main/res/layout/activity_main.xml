@@ -17,7 +17,7 @@
             android:src="@drawable/btn_back"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="20dp"/>
 
         <TextView
             android:id="@+id/text_back"
@@ -27,7 +27,7 @@
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:textColor="@color/list_normal"
-            android:textSize="30sp"
+            android:textSize="35sp"
             android:text="返回首页"/>
 
         <TextView
@@ -46,9 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="40dp"
             android:textColor="@color/list_normal"
-            android:textSize="30sp"
+            android:textSize="35sp"
             android:text="目录"/>
 
         <ImageView
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/text_list"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             android:src="@drawable/ic_list"/>
 
     </RelativeLayout>
@@ -98,13 +98,19 @@
                     android:id="@+id/text_zx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="70dp"
+                    android:layout_marginLeft="40dp"
                     android:textColor="@color/explain"
                     android:textSize="24sp"
                     android:text="【总叙】"/>
 
                 <!--弟子规-->
+                <com.anl.wxb.dzg.TextGroupView
+                    android:id="@+id/textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="150dp" />
 
                 <Button
                     android:id="@+id/btn_play"
@@ -133,6 +139,18 @@
                     android:textColor="@color/explain"
                     android:textSize="24sp" />
 
+                <com.anl.wxb.dzg.MyTextView
+                    android:id="@+id/text_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/text_el"
+                    android:layout_below="@id/text_el"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="10dp"
+                    android:textColor="@color/content"
+                    android:textSize="24sp" />
+
             </RelativeLayout>
 
         </RelativeLayout>
@@ -157,12 +175,12 @@
 
     <RelativeLayout
         android:id="@+id/RL_list"
-        android:layout_width="400dp"
-        android:layout_height="590dp"
+        android:layout_width="450dp"
+        android:layout_height="600dp"
         android:layout_marginTop="75dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="45dp"
         android:background="@drawable/bg_list"
+        android:layout_marginRight="40dp"
         android:visibility="visible">
 
         <ListView
@@ -170,9 +188,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginRight="100dp"
-            android:layout_marginLeft="10dp"
+            android:cacheColorHint="#00000000"
+            android:divider="#00000000"
+            android:dividerHeight="20dp"
             android:scrollbars="none">
 
         </ListView>
@@ -183,18 +204,29 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/bg_fili_progress" />
 
         <!--SeekBar-->
+        <com.anl.wxb.dzg.VerticalSeekbar
+            android:id="@+id/seekbar"
+            android:layout_width="60dp"
+            android:layout_height="330dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            android:thumbOffset="-1dp"
+            android:thumb="@drawable/btn_progress"
+            android:progressDrawable="@drawable/bg_fili"
+            />
 
         <ImageView
             android:id="@+id/btn_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/seekbar_progress"
+            android:layout_below="@id/seekbar"
             android:layout_marginTop="20dp"
-            android:layout_alignLeft="@id/seekbar_progress"
+            android:layout_alignLeft="@id/seekbar"
             android:src="@drawable/btn_up" />
 
         <ImageView
@@ -203,7 +235,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_up"
             android:layout_marginTop="30dp"
-            android:layout_alignLeft="@id/seekbar_progress"
+            android:layout_alignLeft="@id/seekbar"
             android:src="@drawable/btn_down" />
 
     </RelativeLayout>

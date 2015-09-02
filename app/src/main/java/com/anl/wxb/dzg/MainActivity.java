@@ -1,17 +1,364 @@
 package com.anl.wxb.dzg;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.anl.base.AnlActivity;
+import com.anl.base.AnlHttp;
+import com.anl.base.annotation.view.ViewInject;
+import com.anl.base.http.AjaxCallBack;
+import com.anl.wxb.ability.ANLBar;
+import com.anl.wxb.ability.XmppFunc;
 
-public class MainActivity extends AnlActivity{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
+public class MainActivity extends AnlActivity {
+
+    @ViewInject(id = R.id.btn_back, click = "clickActionbar")
+    ImageView btn_back;
+    @ViewInject(id = R.id.text_back, click = "clickActionbar")
+    TextView text_back;
+    @ViewInject(id = R.id.btn_list, click = "clickActionbar")
+    ImageView btn_list;
+    @ViewInject(id = R.id.text_list, click = "clickActionbar")
+    TextView text_list;
+
+    @ViewInject(id = R.id.RL_content)
+    RelativeLayout RL_content;
+    @ViewInject(id = R.id.textview)
+    TextGroupView textview;
+    @ViewInject(id = R.id.btn_play, click = "clickPlay")
+    Button btn_play;
+    @ViewInject(id = R.id.text_ct)
+    MyTextView text_ct;
+
+    @ViewInject(id = R.id.RL_list)
+    RelativeLayout RL_list;
+    @ViewInject(id = R.id.seekbar)
+    VerticalSeekbar seekbar;
+    @ViewInject(id = R.id.list_view)
+    ListView list_view;
+    @ViewInject(id = R.id.btn_up, click = "clickList")
+    ImageView btn_up;
+    @ViewInject(id = R.id.btn_down, click = "clickList")
+    ImageView btn_down;
+
+    @ViewInject(id = R.id.btn_pageleft, click = "clickPage")
+    Button btn_pageleft;
+    @ViewInject(id = R.id.btn_pageright, click = "clickPage")
+    Button btn_pageright;
+
+    private DiZiGui dzg;
+    private int pagecount = 0;      //0~89
+    private ANLBar anlBar;
+    private GestureDetector gestureDetector;
+    private boolean left_right = true;  //left true; right false
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.e("MainActivity", "onCreate");
+        XmppFunc.getInstance().openXmpp(getApplicationContext());
+
+        seekbar.setProgress(100);
+
+        downData();
+
+
+    }
+
+    private void setListener() {
+        seekbar.setOnSeekBarChangeListener(new VerticalSeekbar.OnSeekBarChangeListener() {
+            boolean scroll_flag = false;
+            @Override
+            public void onProgressChanged(VerticalSeekbar VerticalSeekbar, int progress, boolean fromUser) {
+                if(scroll_flag){
+                    int position_seekbar = (int) Math.floor((100 - progress) * 81 / 100);
+                    list_view.setSelection(position_seekbar);
+
+                    Log.e("onProgressChanged_p", String.valueOf(position_seekbar));
+                    Log.e("onProgressChanged_f", String.valueOf(list_view.getFirstVisiblePosition()));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(VerticalSeekbar VerticalSeekbar) {
+                scroll_flag = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(VerticalSeekbar VerticalSeekbar) {
+                scroll_flag = false;
+            }
+        });
+
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                contentPage(position);
+                list_view.setSelection(position - 3);
+                RL_list.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        list_view.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int position_scroll = (int) (100 - Math.floor(firstVisibleItem * 100 / 80));
+                seekbar.setProgress(position_scroll);
+            }
+        });
+    }
+
+    private void downData() {
+        Log.e("MainActivity", "downData");
+
+        AnlHttp http = new AnlHttp();
+        http.get("http://api.filialbox.com/api/dizigui", new AjaxCallBack<String>() {
+            @Override
+            public boolean isProgress() {
+                return super.isProgress();
+            }
+
+            @Override
+            public int getRate() {
+                return super.getRate();
+            }
+
+            @Override
+            public AjaxCallBack<String> progress(boolean progress, int rate) {
+                return super.progress(progress, rate);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+
+                Log.e("downData", "onStart");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+
+                Log.e("onLoading", count + "  " + current);
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                Log.e("downData", "onSuccess");
+//                Log.e("onSuccess_s", s);
+
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(s);
+                    if ("0".equals(jsonObject.getString("code"))) {
+                        setData(s, pagecount);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                    Log.e("onSuccess_e", e.toString());
+                    Toast.makeText(getApplicationContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
+                }
+                super.onSuccess(s);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+
+                Log.e("downData", "onFailure");
+                Log.e("onFailure", strMsg);
+                Toast.makeText(getApplicationContext(), "访问网络错误", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setData(String s, int pagecount) {
+        Log.e("downData", "setData");
+
+        dzg = JSON.parseObject(s, DiZiGui.class);
+
+        Log.e("setData", String.valueOf(dzg.getList()));
+
+        MyAdapter myAdapter = new MyAdapter(getApplicationContext(), dzg.getList());
+        list_view.setAdapter(myAdapter);
+        list_view.setSelected(true);
+
+        setListener();
+
+        contentPage(pagecount);
+    }
+
+    private void contentPage(int pagecount) {
+        DiZiGui.Data data = dzg.getList().get(pagecount);
+
+        textview.setPinyin(data.pinyin);
+        textview.setHanzi(data.hanzi);
+        text_ct.setText(data.jieshi);
+
+        Log.e("setData_p", data.pinyin);
+        Log.e("setData_h", data.hanzi);
+        Log.e("setData_c", data.jieshi);
+    }
+
+    private void soundPlay() {
+        String string = null;
+        String sound = null;
+
+        RL_list.setVisibility(View.INVISIBLE);
+        string = dzg.getList().get(pagecount).hanzi;
+        String[] array_sound = string.split("\\s+");
+//        for(int i=0; i<array_sound.length; i++){
+//            Log.e("clickPlay_a",array_sound[i]);
+//        }
+        sound = array_sound[0]+array_sound[1]+array_sound[2]+"，"+array_sound[3]+array_sound[4]+array_sound[5]+"，"
+                +array_sound[6]+array_sound[7]+array_sound[8]+"，"+array_sound[9]+array_sound[10]+array_sound[11];
+
+        Log.e("clickPlay_s", sound);
+
+        anlBar = new ANLBar(sound, "", "", "", null, null, null);
+        anlBar.setShowwindow(0);
+        anlBar.setPlaysound(1);
+        anlBar.setSpeakspeed("5");
+        anlBar.show();
+    }
+
+    public void clickActionbar(View view) {
+        Log.e("onCreate", "clickActionbar");
+
+        switch (view.getId()) {
+            case R.id.btn_back:
+            case R.id.text_back:
+                finish();
+                break;
+            case R.id.btn_list:
+            case R.id.text_list:
+                if (RL_list.getVisibility() == View.INVISIBLE) {
+                    RL_list.setVisibility(View.VISIBLE);
+                } else if (RL_list.getVisibility() == View.VISIBLE) {
+                    RL_list.setVisibility(View.INVISIBLE);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void clickPlay(View view) {
+        Log.e("onCreate", "clickPlay");
+
+        switch (view.getId()) {
+            case R.id.btn_play:
+                soundPlay();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void clickList(View view) {
+        Log.e("onCreate", "clickList");
+
+        switch (view.getId()) {
+            case R.id.btn_up:
+                int position_up = list_view.getFirstVisiblePosition();
+                list_view.setSelection(position_up - 8);
+                break;
+            case R.id.btn_down:
+                int position_down = list_view.getFirstVisiblePosition();
+                list_view.setSelection(position_down + 8);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void clickPage(View view) {
+        Log.e("onCreate", "clickPage");
+
+        switch (view.getId()) {
+            case R.id.btn_pageleft:
+                left_right = true;
+                changePage(left_right);
+                break;
+            case R.id.btn_pageright:
+                left_right = false;
+                changePage(left_right);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void changePage(boolean left_right) {
+        Log.e("clickPage","ChangePage");
+
+        if(left_right){
+//            左翻页
+            /*
+            * 如果pagecount = 1,则左翻页按钮隐藏
+            * */
+            pagecount--;
+            contentPage(pagecount);
+            list_view.setSelection(pagecount - 3);
+
+            if (pagecount == 0) {
+                btn_pageleft.setVisibility(View.INVISIBLE);
+            }else {
+                btn_pageleft.setVisibility(View.VISIBLE);
+            }
+            btn_pageright.setVisibility(View.VISIBLE);
+
+        } else {
+//            右翻页
+            /*
+            * 如果pagecount=89 ,则右翻页按钮隐藏
+            * */
+            pagecount++;
+            contentPage(pagecount);
+            list_view.setSelection(pagecount - 3);
+
+            if(pagecount == 89){
+                btn_pageright.setVisibility(View.INVISIBLE);
+            } else {
+                btn_pageright.setVisibility(View.VISIBLE);
+            }
+            btn_pageleft.setVisibility(View.VISIBLE);
+        }
+
+        Log.e("ChangePage", String.valueOf(pagecount));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        XmppFunc.getInstance().closeXmpp(getApplicationContext());
     }
 
     @Override

@@ -15,7 +15,7 @@
 
     <!--弟子规 汉字的style-->
     <style name="dzg_hanzi">
-        <item name="android:textSize">54sp</item>
+        <item name="android:textSize">50sp</item>
         <item name="android:textColor">@color/dizigui</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
