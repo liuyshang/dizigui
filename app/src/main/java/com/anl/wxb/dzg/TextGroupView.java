@@ -119,11 +119,10 @@ public class TextGroupView extends RelativeLayout{
         Log.e("TextGroupView","setPinyin");
 
         String[] array_pinyin = pinyin.split("\\s+");
-
-        for(int i=0; i<array_pinyin.length; i++){
-            Log.e("setPinyin_array",array_pinyin[i]);
-        }
-
+//
+//        for(int i=0; i<array_pinyin.length; i++){
+//            Log.e("setPinyin_array",array_pinyin[i]);
+//        }
         pinyin1.setText(array_pinyin[0]);
         pinyin2.setText(array_pinyin[1]);
         pinyin3.setText(array_pinyin[2]);
@@ -143,10 +142,9 @@ public class TextGroupView extends RelativeLayout{
 
         String[] array_hanzi = hanzi.split("\\s+");
 
-        for(int i=0; i<array_hanzi.length; i++){
-            Log.e("setPinyin_array",array_hanzi[i]);
-        }
-
+//        for(int i=0; i<array_hanzi.length; i++){
+//            Log.e("setPinyin_array",array_hanzi[i]);
+//        }
         hanzi1.setText(array_hanzi[0]);
         hanzi2.setText(array_hanzi[1]);
         hanzi3.setText(array_hanzi[2]);

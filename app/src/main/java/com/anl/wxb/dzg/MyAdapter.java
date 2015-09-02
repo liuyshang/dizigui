@@ -59,8 +59,12 @@ public class MyAdapter extends BaseAdapter{
         }
 
         DiZiGui.Data data = mList.get(position);
-        mViewHolder.text_ct.setText(data.hanzi.replaceAll(" +",""));
 
+        if(position < 9) {
+            mViewHolder.text_ct.setText(" " + (position + 1) + " ." + data.hanzi.replaceAll(" +", ""));
+        } else{
+            mViewHolder.text_ct.setText("" + (position + 1) + " ."+data.hanzi.replaceAll(" +",""));
+        }
 //        Log.e("getView", data.hanzi);
 
         return convertView;

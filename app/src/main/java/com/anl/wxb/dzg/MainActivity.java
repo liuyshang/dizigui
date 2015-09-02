@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -28,8 +29,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class MainActivity extends AnlActivity {
+public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
+    @ViewInject(id = R.id.RL_back, click = "clickActionbar")
+    RelativeLayout RL_back;
     @ViewInject(id = R.id.btn_back, click = "clickActionbar")
     ImageView btn_back;
     @ViewInject(id = R.id.text_back, click = "clickActionbar")
@@ -38,6 +41,8 @@ public class MainActivity extends AnlActivity {
     ImageView btn_list;
     @ViewInject(id = R.id.text_list, click = "clickActionbar")
     TextView text_list;
+    @ViewInject(id = R.id.RL_listbar, click = "clickActionbar")
+    RelativeLayout RL_listbar;
 
     @ViewInject(id = R.id.RL_content)
     RelativeLayout RL_content;
@@ -74,65 +79,26 @@ public class MainActivity extends AnlActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Log.e("MainActivity", "onCreate");
+
+        init();   //初始化
+
+        downData();
+    }
+
+//    初始化 xmppfunc,seekbar的thumb位置，左翻按钮初始为隐藏，listview初始为隐藏
+    private void init() {
+        Log.e("MainActivity", "init");
+
         XmppFunc.getInstance().openXmpp(getApplicationContext());
 
         seekbar.setProgress(100);
-
-        downData();
-
-
+        btn_pageleft.setVisibility(View.INVISIBLE);
+        RL_list.setVisibility(View.INVISIBLE);
     }
 
-    private void setListener() {
-        seekbar.setOnSeekBarChangeListener(new VerticalSeekbar.OnSeekBarChangeListener() {
-            boolean scroll_flag = false;
-            @Override
-            public void onProgressChanged(VerticalSeekbar VerticalSeekbar, int progress, boolean fromUser) {
-                if(scroll_flag){
-                    int position_seekbar = (int) Math.floor((100 - progress) * 81 / 100);
-                    list_view.setSelection(position_seekbar);
 
-                    Log.e("onProgressChanged_p", String.valueOf(position_seekbar));
-                    Log.e("onProgressChanged_f", String.valueOf(list_view.getFirstVisiblePosition()));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(VerticalSeekbar VerticalSeekbar) {
-                scroll_flag = true;
-            }
-
-            @Override
-            public void onStopTrackingTouch(VerticalSeekbar VerticalSeekbar) {
-                scroll_flag = false;
-            }
-        });
-
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                contentPage(position);
-                list_view.setSelection(position - 3);
-                RL_list.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        list_view.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int position_scroll = (int) (100 - Math.floor(firstVisibleItem * 100 / 80));
-                seekbar.setProgress(position_scroll);
-            }
-        });
-    }
-
+//    下载数据
     private void downData() {
         Log.e("MainActivity", "downData");
 
@@ -198,6 +164,7 @@ public class MainActivity extends AnlActivity {
         });
     }
 
+//    设置页面数据
     private void setData(String s, int pagecount) {
         Log.e("downData", "setData");
 
@@ -207,13 +174,87 @@ public class MainActivity extends AnlActivity {
 
         MyAdapter myAdapter = new MyAdapter(getApplicationContext(), dzg.getList());
         list_view.setAdapter(myAdapter);
-        list_view.setSelected(true);
 
         setListener();
 
         contentPage(pagecount);
     }
 
+    //    seekbar,list_view，RL_content的滑动，点击监听
+    private void setListener() {
+//        seekbar的滑动监听
+        seekbar.setOnSeekBarChangeListener(new VerticalSeekbar.OnSeekBarChangeListener() {
+            boolean scroll_flag = false;
+
+            @Override
+            public void onProgressChanged(VerticalSeekbar VerticalSeekbar, int progress, boolean fromUser) {
+                if (scroll_flag) {
+                    int position_seekbar = (int) Math.floor((100 - progress) * 81 / 100);
+                    list_view.setSelection(position_seekbar);
+
+                    Log.e("onProgressChanged_p", String.valueOf(position_seekbar));
+                    Log.e("onProgressChanged_f", String.valueOf(list_view.getFirstVisiblePosition()));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(VerticalSeekbar VerticalSeekbar) {
+                scroll_flag = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(VerticalSeekbar VerticalSeekbar) {
+                scroll_flag = false;
+            }
+        });
+
+                /*
+        * 设置scrollview 顶部时，往下拉的时候，不现实颜色渐变
+        * */
+        list_view.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
+//        listview 的点击监听
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                pagecount = position;
+                contentPage(pagecount);
+                list_view.setSelection(pagecount - 3);
+                RL_list.setVisibility(View.INVISIBLE);
+                if (pagecount == 0) {
+                    btn_pageleft.setVisibility(View.INVISIBLE);
+                    btn_pageright.setVisibility(View.VISIBLE);
+                } else if (pagecount == 89) {
+                    btn_pageleft.setVisibility(View.VISIBLE);
+                    btn_pageright.setVisibility(View.INVISIBLE);
+                } else {
+                    btn_pageleft.setVisibility(View.VISIBLE);
+                    btn_pageright.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        list_view.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            //          listview的滑动监听
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int position_scroll = (int) (100 - Math.floor(firstVisibleItem * 100 / 80));
+                seekbar.setProgress(position_scroll);
+            }
+        });
+
+//        RL-content的滑动监听
+        gestureDetector = new GestureDetector(this, new SimpleGestureListener());
+        RL_content.setOnTouchListener(this);
+    }
+
+
+    //    设置弟子规的内容
     private void contentPage(int pagecount) {
         DiZiGui.Data data = dzg.getList().get(pagecount);
 
@@ -224,8 +265,11 @@ public class MainActivity extends AnlActivity {
         Log.e("setData_p", data.pinyin);
         Log.e("setData_h", data.hanzi);
         Log.e("setData_c", data.jieshi);
+
+        soundPlay();
     }
 
+//    声音播放
     private void soundPlay() {
         String string = null;
         String sound = null;
@@ -236,8 +280,8 @@ public class MainActivity extends AnlActivity {
 //        for(int i=0; i<array_sound.length; i++){
 //            Log.e("clickPlay_a",array_sound[i]);
 //        }
-        sound = array_sound[0]+array_sound[1]+array_sound[2]+"，"+array_sound[3]+array_sound[4]+array_sound[5]+"，"
-                +array_sound[6]+array_sound[7]+array_sound[8]+"，"+array_sound[9]+array_sound[10]+array_sound[11];
+        sound = array_sound[0] + array_sound[1] + array_sound[2] + "，" + array_sound[3] + array_sound[4] + array_sound[5] + "，"
+                + array_sound[6] + array_sound[7] + array_sound[8] + "，" + array_sound[9] + array_sound[10] + array_sound[11];
 
         Log.e("clickPlay_s", sound);
 
@@ -254,10 +298,12 @@ public class MainActivity extends AnlActivity {
         switch (view.getId()) {
             case R.id.btn_back:
             case R.id.text_back:
+            case R.id.RL_back:
                 finish();
                 break;
             case R.id.btn_list:
             case R.id.text_list:
+            case R.id.RL_listbar:
                 if (RL_list.getVisibility() == View.INVISIBLE) {
                     RL_list.setVisibility(View.VISIBLE);
                 } else if (RL_list.getVisibility() == View.VISIBLE) {
@@ -274,6 +320,7 @@ public class MainActivity extends AnlActivity {
 
         switch (view.getId()) {
             case R.id.btn_play:
+                list_view.setVisibility(View.INVISIBLE);
                 soundPlay();
                 break;
             default:
@@ -287,11 +334,24 @@ public class MainActivity extends AnlActivity {
         switch (view.getId()) {
             case R.id.btn_up:
                 int position_up = list_view.getFirstVisiblePosition();
-                list_view.setSelection(position_up - 8);
+
+                Log.e("clickList_up", String.valueOf(position_up));
+
+                if (position_up < 8) {
+                    list_view.setSelection(0);
+                } else {
+                    list_view.setSelection(position_up - 8);
+                }
                 break;
             case R.id.btn_down:
                 int position_down = list_view.getFirstVisiblePosition();
-                list_view.setSelection(position_down + 8);
+
+                Log.e("clickList_down", String.valueOf(position_down));
+                if (position_down > 81) {
+                    list_view.setSelection(81);
+                } else {
+                    list_view.setSelection(position_down + 8);
+                }
                 break;
             default:
                 break;
@@ -315,40 +375,47 @@ public class MainActivity extends AnlActivity {
         }
     }
 
+//    翻页
     private void changePage(boolean left_right) {
-        Log.e("clickPage","ChangePage");
+        Log.e("clickPage", "ChangePage");
 
-        if(left_right){
+        if (left_right) {
 //            左翻页
             /*
             * 如果pagecount = 1,则左翻页按钮隐藏
             * */
-            pagecount--;
-            contentPage(pagecount);
-            list_view.setSelection(pagecount - 3);
+            if (pagecount != 0) {
+                pagecount--;
+                contentPage(pagecount);
+                list_view.setSelection(pagecount - 3);
 
-            if (pagecount == 0) {
-                btn_pageleft.setVisibility(View.INVISIBLE);
-            }else {
-                btn_pageleft.setVisibility(View.VISIBLE);
+                if (pagecount == 0) {
+                    btn_pageleft.setVisibility(View.INVISIBLE);
+                } else {
+                    btn_pageleft.setVisibility(View.VISIBLE);
+                }
+                btn_pageright.setVisibility(View.VISIBLE);
+                RL_list.setVisibility(View.INVISIBLE);
             }
-            btn_pageright.setVisibility(View.VISIBLE);
 
         } else {
 //            右翻页
             /*
             * 如果pagecount=89 ,则右翻页按钮隐藏
             * */
-            pagecount++;
-            contentPage(pagecount);
-            list_view.setSelection(pagecount - 3);
+            if (pagecount != 89) {
+                pagecount++;
+                contentPage(pagecount);
+                list_view.setSelection(pagecount - 3);
 
-            if(pagecount == 89){
-                btn_pageright.setVisibility(View.INVISIBLE);
-            } else {
-                btn_pageright.setVisibility(View.VISIBLE);
+                if (pagecount == 89) {
+                    btn_pageright.setVisibility(View.INVISIBLE);
+                } else {
+                    btn_pageright.setVisibility(View.VISIBLE);
+                }
+                btn_pageleft.setVisibility(View.VISIBLE);
+                RL_list.setVisibility(View.INVISIBLE);
             }
-            btn_pageleft.setVisibility(View.VISIBLE);
         }
 
         Log.e("ChangePage", String.valueOf(pagecount));
@@ -358,6 +425,7 @@ public class MainActivity extends AnlActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        Log.e("MainActivity", "onDestroy");
         XmppFunc.getInstance().closeXmpp(getApplicationContext());
     }
 
@@ -381,5 +449,52 @@ public class MainActivity extends AnlActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    private class SimpleGestureListener implements GestureDetector.OnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.e("SimpleGestureListener", "onFling");
+
+            if (e1.getX() - e2.getX() > 100 && Math.abs(velocityX) > 100) {
+                left_right = false;
+                changePage(left_right);
+
+            } else if (e2.getX() - e1.getX() > 100 && Math.abs(velocityX) > 100) {
+                left_right = true;
+                changePage(left_right);
+            }
+            return true;
+        }
     }
 }
