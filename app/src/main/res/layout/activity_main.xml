@@ -51,7 +51,7 @@
 
         <RelativeLayout
             android:id="@+id/RL_listbar"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
@@ -168,7 +168,7 @@
                     android:layout_marginTop="20dp"
                     android:lineSpacingExtra="15sp"
                     android:textColor="@color/content"
-                    android:textSize="24sp" />
+                    android:textSize="23sp" />
 
             </RelativeLayout>
 
