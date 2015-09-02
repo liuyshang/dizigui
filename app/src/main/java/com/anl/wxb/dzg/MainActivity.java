@@ -217,6 +217,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         MyAdapter myAdapter = new MyAdapter(getApplicationContext(), dzg.getList());
         list_view.setAdapter(myAdapter);
+        list_view.setSelected(true);
 
         setListener();
 
@@ -317,7 +318,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         String string = null;
         String sound = null;
 
-        RL_list.setVisibility(View.INVISIBLE);
         string = dzg.getList().get(pagecount).hanzi;
         String[] array_sound = string.split("\\s+");
 //        for(int i=0; i<array_sound.length; i++){
@@ -363,8 +363,9 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         switch (view.getId()) {
             case R.id.btn_play:
-                list_view.setVisibility(View.INVISIBLE);
+                RL_list.setVisibility(View.INVISIBLE);
                 soundPlay();
+                new TimeThread().start();
                 break;
             default:
                 break;
@@ -462,6 +463,20 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         }
 
         Log.e("ChangePage", String.valueOf(pagecount));
+    }
+
+    private class TimeThread extends Thread {
+        public void run() {
+
+            Log.e("MainActivity", "*****TImeThread*****");
+
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                Log.e("run", e.toString());
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
