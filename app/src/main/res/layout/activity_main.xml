@@ -10,25 +10,34 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_actionbar">
 
-        <ImageView
-            android:id="@+id/btn_back"
+        <RelativeLayout
+            android:id="@+id/RL_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/btn_back"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"/>
+            android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/text_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/btn_back"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:textColor="@color/list_normal"
-            android:textSize="30sp"
-            android:text="返回首页"/>
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/btn_back" />
+
+            <TextView
+                android:id="@+id/text_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/btn_back"
+                android:text="返回首页"
+                android:textColor="@color/list_normal"
+                android:textSize="35sp" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/text_title"
@@ -36,29 +45,38 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:text="弟子规"
             android:textColor="@color/list_normal"
-            android:textSize="40sp"
-            android:text="弟子规"/>
+            android:textSize="40sp" />
 
-        <TextView
-            android:id="@+id/text_list"
+        <RelativeLayout
+            android:id="@+id/RL_listbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
-            android:textColor="@color/list_normal"
-            android:textSize="30sp"
-            android:text="目录"/>
+            android:layout_centerVertical="true">
 
-        <ImageView
-            android:id="@+id/btn_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/text_list"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_list"/>
+            <TextView
+                android:id="@+id/text_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="40dp"
+                android:text="目录"
+                android:textColor="@color/list_normal"
+                android:textSize="35sp" />
+
+            <ImageView
+                android:id="@+id/btn_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/text_list"
+                android:src="@drawable/ic_list" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -74,13 +92,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="50dp"
             android:layout_marginBottom="50dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/bg_content">
 
-        <ImageView
+            <ImageView
                 android:id="@+id/iv_center"
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
@@ -98,13 +116,19 @@
                     android:id="@+id/text_zx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="70dp"
+                    android:text="【总叙】"
                     android:textColor="@color/explain"
-                    android:textSize="24sp"
-                    android:text="【总叙】"/>
+                    android:textSize="26sp" />
 
                 <!--弟子规-->
+                <com.anl.wxb.dzg.TextGroupView
+                    android:id="@+id/textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="150dp" />
 
                 <Button
                     android:id="@+id/btn_play"
@@ -113,7 +137,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="40dp"
                     android:layout_marginLeft="40dp"
-                    android:background="@drawable/btn_play"/>
+                    android:background="@drawable/btn_play" />
 
             </RelativeLayout>
 
@@ -131,6 +155,19 @@
                     android:layout_marginTop="70dp"
                     android:text="解释"
                     android:textColor="@color/explain"
+                    android:textSize="26sp" />
+
+                <com.anl.wxb.dzg.MyTextView
+                    android:id="@+id/text_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/text_el"
+                    android:layout_below="@id/text_el"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="20dp"
+                    android:lineSpacingExtra="15sp"
+                    android:textColor="@color/content"
                     android:textSize="24sp" />
 
             </RelativeLayout>
@@ -143,7 +180,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/page_left"/>
+            android:background="@drawable/page_left" />
 
         <Button
             android:id="@+id/btn_pageright"
@@ -157,11 +194,11 @@
 
     <RelativeLayout
         android:id="@+id/RL_list"
-        android:layout_width="400dp"
-        android:layout_height="590dp"
-        android:layout_marginTop="75dp"
+        android:layout_width="480dp"
+        android:layout_height="600dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="45dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="75dp"
         android:background="@drawable/bg_list"
         android:visibility="visible">
 
@@ -169,10 +206,14 @@
             android:id="@+id/list_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="90dp"
             android:layout_marginTop="40dp"
-            android:layout_marginBottom="25dp"
-            android:layout_marginRight="100dp"
-            android:layout_marginLeft="10dp"
+            android:cacheColorHint="#00000000"
+            android:divider="#00000000"
+            android:dividerHeight="20dp"
+            android:listSelector="#00000000"
             android:scrollbars="none">
 
         </ListView>
@@ -182,28 +223,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/bg_fili_progress" />
 
         <!--SeekBar-->
+        <com.anl.wxb.dzg.VerticalSeekbar
+            android:id="@+id/seekbar"
+            android:layout_width="60dp"
+            android:layout_height="330dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="40dp"
+            android:progressDrawable="@drawable/bg_fili"
+            android:thumb="@drawable/btn_progress"
+            android:thumbOffset="-1dp" />
 
         <ImageView
             android:id="@+id/btn_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/seekbar_progress"
+            android:layout_alignLeft="@id/seekbar"
+            android:layout_below="@id/seekbar"
             android:layout_marginTop="20dp"
-            android:layout_alignLeft="@id/seekbar_progress"
             android:src="@drawable/btn_up" />
 
         <ImageView
             android:id="@+id/btn_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/seekbar"
             android:layout_below="@id/btn_up"
             android:layout_marginTop="30dp"
-            android:layout_alignLeft="@id/seekbar_progress"
             android:src="@drawable/btn_down" />
 
     </RelativeLayout>

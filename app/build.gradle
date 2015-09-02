@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "com.anl.wxb.dzg"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode getVersionCode()
         versionName getVersionName()
