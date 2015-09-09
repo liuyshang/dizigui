@@ -88,8 +88,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     /*存储后的文件路径：/date/data/<package name>/share_prefs + 文件名.xml*/
     public static final String PATH = "/data/data/com.anl.wxb.dzg/shared_prefs/dzg.xml";
     public String path_share = "/data/data/com.anl.wxb.dzg/shared_prefs/";
-
-    private String num = null;
+    private String encrypt_s = null;  //保存解密出的数据
 
 
     @Override
@@ -108,12 +107,12 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 Log.e("File", "file_share 存在///file_dzg 存在");
 
                 String string = share_file.getString(key,"");
-
                 new DecryptAsyncTask().execute(string);
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setData(num, pagecount);
+                        setData(encrypt_s, pagecount);
                     }
                 },500);
 
@@ -581,7 +580,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         protected String doInBackground(String... params) {
             Log.e("MainActivity","DecryptAsyncTask");
             try {
-                num = new AESHelper().decrypt("aes",params[0]);
+                encrypt_s = new AESHelper().decrypt("aes",params[0]);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("DecryptAsyncTask", String.valueOf(e));
