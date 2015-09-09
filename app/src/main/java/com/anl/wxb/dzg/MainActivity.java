@@ -1,8 +1,11 @@
 package com.anl.wxb.dzg;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -86,6 +89,8 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     public static final String PATH = "/data/data/com.anl.wxb.dzg/shared_prefs/dzg.xml";
     public String path_share = "/data/data/com.anl.wxb.dzg/shared_prefs/";
 
+    private String num = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +105,17 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         if(file_share.exists()){
             if(file_dzg.exists()){
-                Log.e("File","file_share 存在///file_dzg 存在");
+                Log.e("File", "file_share 存在///file_dzg 存在");
 
                 String string = share_file.getString(key,"");
-                setData(string , pagecount);
+
+                new DecryptAsyncTask().execute(string);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setData(num, pagecount);
+                    }
+                },500);
 
 //                Log.e("File_string",string);
             }else{
@@ -182,10 +194,12 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                     jsonObject = new JSONObject(s);
                     if ("0".equals(jsonObject.getString("code"))) {
 
-                        //      获取Editor对象
-                        SharedPreferences.Editor editor = share_file.edit();
-                        editor.putString(key, s);
-                        editor.apply();
+                        new EncryptAsyncTask().execute(s);
+//                        String aes_s = new AESHelper().encrypt("aes",s);
+//                        //      获取Editor对象
+//                        SharedPreferences.Editor editor = share_file.edit();
+//                        editor.putString(key, aes_s);
+//                        editor.apply();
 
                         setData(s, pagecount);
                     }
@@ -194,6 +208,8 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
                     Log.e("onSuccess_e", e.toString());
                     Toast.makeText(getApplicationContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 super.onSuccess(s);
             }
@@ -363,7 +379,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         switch (view.getId()) {
             case R.id.btn_play:
-                list_view.setVisibility(View.INVISIBLE);
                 soundPlay();
                 break;
             default:
@@ -538,6 +553,40 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 changePage(left_right);
             }
             return true;
+        }
+    }
+
+    private class EncryptAsyncTask extends AsyncTask<String, Integer, String>{
+        @Override
+        protected String doInBackground(String... params) {
+            Log.e("MainActivity","EncryptAsyncTask");
+
+            String aes_s = null;
+            try {
+                aes_s = new AESHelper().encrypt("aes", params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("EncryptAsyncTask", String.valueOf(e));
+            }
+            //      获取Editor对象
+            SharedPreferences.Editor editor = share_file.edit();
+            editor.putString(key, aes_s);
+            editor.apply();
+            return null;
+        }
+    }
+
+    private class DecryptAsyncTask extends AsyncTask<String ,Integer,String>{
+        @Override
+        protected String doInBackground(String... params) {
+            Log.e("MainActivity","DecryptAsyncTask");
+            try {
+                num = new AESHelper().decrypt("aes",params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("DecryptAsyncTask", String.valueOf(e));
+            }
+            return null;
         }
     }
 }
