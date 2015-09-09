@@ -318,6 +318,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         String string = null;
         String sound = null;
 
+        RL_list.setVisibility(View.INVISIBLE);
         string = dzg.getList().get(pagecount).hanzi;
         String[] array_sound = string.split("\\s+");
 //        for(int i=0; i<array_sound.length; i++){
@@ -363,7 +364,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         switch (view.getId()) {
             case R.id.btn_play:
-                RL_list.setVisibility(View.INVISIBLE);
                 soundPlay();
                 new TimeThread().start();
                 break;
