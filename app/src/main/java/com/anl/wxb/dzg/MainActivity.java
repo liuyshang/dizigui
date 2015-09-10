@@ -127,7 +127,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                         pDialog.cancel();
                         setData(encrypt_s, pagecount);
                     }
-                },500);
+                },900);
 
 //                Log.e("File_string",string);
             }else{
@@ -367,7 +367,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         anlBar.setShowwindow(0);
         anlBar.setPlaysound(1);
         anlBar.setSpeakspeed("5");
-        anlBar.setSpeakvolume("2");
         anlBar.show();
     }
 
