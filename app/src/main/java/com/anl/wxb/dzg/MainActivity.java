@@ -1,6 +1,7 @@
 package com.anl.wxb.dzg;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
@@ -102,6 +105,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         File file_share = new File(path_share);
         File file_dzg = new File(path_share + "dzg.xml");
 
+//        dzg.xml存在就读取数据，不存在就下载数据
         if(file_share.exists()){
             if(file_dzg.exists()){
                 Log.e("File", "file_share 存在///file_dzg 存在");
@@ -109,9 +113,18 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 String string = share_file.getString(key,"");
                 new DecryptAsyncTask().execute(string);
 
+//                加载数据时，显示Loading效果
+                final SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                pDialog.setTitleText("Loading");
+                pDialog.setCancelable(false);
+                pDialog.show();
+
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        pDialog.cancel();
                         setData(encrypt_s, pagecount);
                     }
                 },500);
@@ -193,6 +206,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                     jsonObject = new JSONObject(s);
                     if ("0".equals(jsonObject.getString("code"))) {
 
+//                        加密数据
                         new EncryptAsyncTask().execute(s);
 //                        String aes_s = new AESHelper().encrypt("aes",s);
 //                        //      获取Editor对象
@@ -206,9 +220,12 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                     e.printStackTrace();
 
                     Log.e("onSuccess_e", e.toString());
-                    Toast.makeText(getApplicationContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setContentText("获取数据失败")
+                            .show();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                      e.printStackTrace();
                 }
                 super.onSuccess(s);
             }
@@ -219,7 +236,10 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
                 Log.e("downData", "onFailure");
                 Log.e("onFailure", strMsg);
-                Toast.makeText(getApplicationContext(), "访问网络错误", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "访问网络错误", Toast.LENGTH_SHORT).show();
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setContentText("访问网络错误")
+                        .show();
             }
         });
     }
