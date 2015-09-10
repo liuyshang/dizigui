@@ -367,6 +367,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         anlBar.setShowwindow(0);
         anlBar.setPlaysound(1);
         anlBar.setSpeakspeed("5");
+        anlBar.setSpeakvolume("2");
         anlBar.show();
     }
 
@@ -501,7 +502,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+//        anlBar.dismiss();
         Log.e("MainActivity", "onDestroy");
         XmppFunc.getInstance().closeXmpp(getApplicationContext());
     }
