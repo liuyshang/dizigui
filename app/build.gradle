@@ -59,7 +59,5 @@ dependencies {
     compile files ('libs/anl_base_1.1.3.jar')
     compile files ('libs/fastjson-1.2.5.jar')
     compile 'com.anl.sdk:sweetalertdialog:1.0.8@aar'
-    compile 'com.anl.sdk:anlability:1.0@aar'
-
-
+    compile 'com.anl.sdk:anlability:1.+@aar'
 }
