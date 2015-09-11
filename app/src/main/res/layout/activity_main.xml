@@ -33,7 +33,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/btn_back"
-                android:text="返回首页"
+                android:text="返回上级"
                 android:textColor="@color/list_normal"
                 android:textSize="35sp" />
 
