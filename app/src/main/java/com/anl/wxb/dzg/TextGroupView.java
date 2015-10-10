@@ -53,27 +53,19 @@ public class TextGroupView extends RelativeLayout{
 
     public TextGroupView(Context context) {
         super(context);
-
-        Log.e("TextGroupView", "one parameter");
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public TextGroupView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
-        Log.e("TextGroupView", "four parameter");
     }
 
     public TextGroupView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        Log.e("TextGroupView", "three parameter");
     }
 
     public TextGroupView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        Log.e("TextGroupView", "two parameter");
 
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.dzg_textct,this);
@@ -116,13 +108,8 @@ public class TextGroupView extends RelativeLayout{
 
     }
     public void setPinyin(String pinyin){
-        Log.e("TextGroupView","setPinyin");
-
         String[] array_pinyin = pinyin.split("\\s+");
-//
-//        for(int i=0; i<array_pinyin.length; i++){
-//            Log.e("setPinyin_array",array_pinyin[i]);
-//        }
+
         pinyin1.setText(array_pinyin[0]);
         pinyin2.setText(array_pinyin[1]);
         pinyin3.setText(array_pinyin[2]);
@@ -138,13 +125,8 @@ public class TextGroupView extends RelativeLayout{
     }
 
     public void setHanzi(String hanzi){
-        Log.e("TextGroupView","setHanzi");
-
         String[] array_hanzi = hanzi.split("\\s+");
 
-//        for(int i=0; i<array_hanzi.length; i++){
-//            Log.e("setPinyin_array",array_hanzi[i]);
-//        }
         hanzi1.setText(array_hanzi[0]);
         hanzi2.setText(array_hanzi[1]);
         hanzi3.setText(array_hanzi[2]);

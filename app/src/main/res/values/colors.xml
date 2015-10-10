@@ -13,4 +13,6 @@
 
     <!--弟子规 颜色-->
     <color name="dizigui">#8c1c1c</color>
+
+    <color name="silver">#c0c0c0</color>
 </resources>

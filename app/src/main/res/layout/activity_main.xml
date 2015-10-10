@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -221,30 +222,35 @@
         <ImageView
             android:id="@+id/seekbar_progress"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="52dp"
             android:background="@drawable/bg_fili_progress" />
 
-        <!--SeekBar-->
-        <com.anl.wxb.dzg.VerticalSeekbar
-            android:id="@+id/seekbar"
-            android:layout_width="60dp"
-            android:layout_height="330dp"
+        <com.anl.wxb.dzg.VerticalSeekBarWrapper
+            android:id="@+id/seekBarContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="40dp"
-            android:progressDrawable="@drawable/bg_fili"
-            android:thumb="@drawable/btn_progress"
-            android:thumbOffset="-1dp" />
+            android:layout_marginTop="50dp">
+
+            <com.anl.wxb.dzg.VerticalSeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:thumb="@drawable/btn_progress"
+                android:progressDrawable="@drawable/bg_fili"
+                app:seekBarRotation="CW90" />
+        </com.anl.wxb.dzg.VerticalSeekBarWrapper>
 
         <ImageView
             android:id="@+id/btn_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/seekbar"
-            android:layout_below="@id/seekbar"
+            android:layout_alignLeft="@id/seekBarContainer"
+            android:layout_below="@id/seekBarContainer"
             android:layout_marginTop="20dp"
             android:src="@drawable/btn_up" />
 
@@ -252,7 +258,7 @@
             android:id="@+id/btn_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/seekbar"
+            android:layout_alignLeft="@id/seekBarContainer"
             android:layout_below="@id/btn_up"
             android:layout_marginTop="30dp"
             android:src="@drawable/btn_down" />
