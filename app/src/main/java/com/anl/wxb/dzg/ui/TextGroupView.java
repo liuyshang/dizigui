@@ -1,4 +1,4 @@
-package com.anl.wxb.dzg;
+package com.anl.wxb.dzg.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.anl.wxb.dzg.R;
 
 /**
  * Created by admin on 2015/9/1.

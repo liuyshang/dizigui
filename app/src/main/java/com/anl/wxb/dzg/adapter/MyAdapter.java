@@ -1,12 +1,14 @@
-package com.anl.wxb.dzg;
+package com.anl.wxb.dzg.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.anl.wxb.dzg.entity.DiZiGui;
+import com.anl.wxb.dzg.R;
 
 import java.util.List;
 

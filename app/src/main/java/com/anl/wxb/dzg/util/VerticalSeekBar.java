@@ -33,7 +33,7 @@
  */
 /*============================================================================*/
 
-package com.anl.wxb.dzg;
+package com.anl.wxb.dzg.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -47,6 +47,8 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.SeekBar;
+
+import com.anl.wxb.dzg.R;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
