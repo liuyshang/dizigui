@@ -13,6 +13,7 @@ def getVersionCode = { ->
         return -1;
     }
 }
+
 def getVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
@@ -26,6 +27,7 @@ def getVersionName = { ->
         return null;
     }
 }
+
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
