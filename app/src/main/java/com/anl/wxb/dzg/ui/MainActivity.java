@@ -115,7 +115,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 pDialog.setTitleText("Loading");
                 pDialog.setCancelable(false);
                 pDialog.show();
-
                 new DecryptAsyncTask().execute(string);
             } else {
                 downData();
