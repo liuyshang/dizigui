@@ -169,6 +169,8 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
             @Override
             public void onFailure(Throwable t, int errorNo, String strMsg) {
                 super.onFailure(t, errorNo, strMsg);
+                /*访问网络失败时，取消加载效果图*/
+                pDialog.cancel();
                 new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
                         .setContentText("访问网络错误")
                         .show();
