@@ -102,19 +102,20 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         init();   //初始化
         File file_share = new File(path_share);
         File file_dzg = new File(path_share + "dzg.xml");
+        //隐藏页面布局
+        RL_content.setVisibility(View.INVISIBLE);
+        //加载数据时，显示Loading效果
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         //dzg.xml存在就读取数据，不存在就下载数据
         if (file_share.exists()) {
             if (file_dzg.exists()) {
                 //数据
                 String string = share_file.getString(key, "");
-                //隐藏页面布局
-                RL_content.setVisibility(View.INVISIBLE);
-                //加载数据时，显示Loading效果
-                pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                pDialog.setTitleText("Loading");
-                pDialog.setCancelable(false);
-                pDialog.show();
                 new DecryptAsyncTask().execute(string);
             } else {
                 downData();
@@ -143,15 +144,16 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         http.get("http://api.filialbox.com/api/dizigui", new AjaxCallBack<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.e("downData", "onSuccess");
-
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(s);
                     if (jsonObject.getString("code").equals("0")) {
+                        /*首次使用时，若网络较差，下载数据需要时间长*/
+                        pDialog.cancel();
+                        RL_content.setVisibility(View.VISIBLE);
+                        setData(s, pagecount);
                         //加密数据
                         new EncryptAsyncTask().execute(s);
-                        setData(s, pagecount);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
