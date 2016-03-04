@@ -33,7 +33,7 @@
  */
 /*============================================================================*/
 
-package com.anl.wxb.dzg.util;
+package com.anl.wxb.dzg.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

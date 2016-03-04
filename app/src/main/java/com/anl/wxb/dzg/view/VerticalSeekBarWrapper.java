@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.anl.wxb.dzg.util;
+package com.anl.wxb.dzg.view;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

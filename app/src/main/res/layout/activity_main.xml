@@ -124,7 +124,7 @@
                     android:textSize="26sp" />
 
                 <!--弟子规-->
-                <com.anl.wxb.dzg.util.TextGroupView
+                <com.anl.wxb.dzg.view.TextGroupView
                     android:id="@+id/textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
                     android:textColor="@color/explain"
                     android:textSize="26sp" />
 
-                <com.anl.wxb.dzg.util.MyTextView
+                <com.anl.wxb.dzg.view.MyTextView
                     android:id="@+id/text_ct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -228,7 +228,7 @@
             android:layout_marginTop="52dp"
             android:background="@drawable/bg_fili_progress" />
 
-        <com.anl.wxb.dzg.util.VerticalSeekBarWrapper
+        <com.anl.wxb.dzg.view.VerticalSeekBarWrapper
             android:id="@+id/seekBarContainer"
             android:layout_width="wrap_content"
             android:layout_height="300dp"
@@ -236,14 +236,14 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="50dp">
 
-            <com.anl.wxb.dzg.util.VerticalSeekBar
+            <com.anl.wxb.dzg.view.VerticalSeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:thumb="@drawable/btn_progress"
                 android:progressDrawable="@drawable/bg_fili"
                 app:seekBarRotation="CW90" />
-        </com.anl.wxb.dzg.util.VerticalSeekBarWrapper>
+        </com.anl.wxb.dzg.view.VerticalSeekBarWrapper>
 
         <ImageView
             android:id="@+id/btn_up"

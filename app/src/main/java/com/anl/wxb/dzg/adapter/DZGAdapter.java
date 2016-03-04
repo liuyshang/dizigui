@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * Created by admin on 2015/9/1.
  */
-public class MyAdapter extends BaseAdapter{
+public class DZGAdapter extends BaseAdapter {
 
     public Context mContext;
     public List<DiZiGui.Data> mList = null;
 
-    public MyAdapter(Context mContext, List<DiZiGui.Data> mList){
+    public DZGAdapter(Context mContext, List<DiZiGui.Data> mList) {
         super();
         this.mContext = mContext;
         this.mList = mList;
@@ -43,32 +43,24 @@ public class MyAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        Log.e("MyAdapter","getView");
-
         ViewHolder mViewHolder = null;
 
-        if(convertView == null){
+        if (convertView == null) {
             mViewHolder = new ViewHolder();
             LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
-            convertView = mLayoutInflater.inflate(R.layout.list_textct,null);
-
+            convertView = mLayoutInflater.inflate(R.layout.list_textct, null);
             mViewHolder.text_ct = (TextView) convertView.findViewById(R.id.text_ct);
-
             convertView.setTag(mViewHolder);
-
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
         DiZiGui.Data data = mList.get(position);
-
-        if(position < 9) {
+        if (position < 9) {
             mViewHolder.text_ct.setText(" " + (position + 1) + " ." + data.hanzi.replaceAll(" +", ""));
-        } else{
-            mViewHolder.text_ct.setText("" + (position + 1) + " ."+data.hanzi.replaceAll(" +",""));
+        } else {
+            mViewHolder.text_ct.setText("" + (position + 1) + " ." + data.hanzi.replaceAll(" +", ""));
         }
-//        Log.e("getView", data.hanzi);
-
         return convertView;
     }
 

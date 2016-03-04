@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.anl.base.AnlActivity;
@@ -24,13 +23,14 @@ import com.anl.base.annotation.view.ViewInject;
 import com.anl.base.http.AjaxCallBack;
 import com.anl.wxb.ability.ANLBar;
 import com.anl.wxb.ability.XmppFunc;
-import com.anl.wxb.dzg.aes.AESHelper;
-import com.anl.wxb.dzg.entity.DiZiGui;
-import com.anl.wxb.dzg.adapter.MyAdapter;
-import com.anl.wxb.dzg.util.MyTextView;
 import com.anl.wxb.dzg.R;
-import com.anl.wxb.dzg.util.TextGroupView;
-import com.anl.wxb.dzg.util.VerticalSeekBar;
+import com.anl.wxb.dzg.adapter.DZGAdapter;
+import com.anl.wxb.dzg.entity.DiZiGui;
+import com.anl.wxb.dzg.util.AESHelper;
+import com.anl.wxb.dzg.util.SimpleGuesture;
+import com.anl.wxb.dzg.view.MyTextView;
+import com.anl.wxb.dzg.view.TextGroupView;
+import com.anl.wxb.dzg.view.VerticalSeekBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,168 +41,128 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
+    /**
+     * 返回按钮
+     */
     @ViewInject(id = R.id.RL_back, click = "onClick")
-    RelativeLayout RL_back;
-    @ViewInject(id = R.id.btn_back, click = "onClick")
-    ImageView btn_back;
-    @ViewInject(id = R.id.text_back, click = "onClick")
-    TextView text_back;
-    @ViewInject(id = R.id.btn_list, click = "onClick")
-    ImageView btn_list;
-    @ViewInject(id = R.id.text_list, click = "onClick")
-    TextView text_list;
+    private RelativeLayout RL_back;
+    /**
+     * 目录
+     */
     @ViewInject(id = R.id.RL_listbar, click = "onClick")
-    RelativeLayout RL_listbar;
-
+    private RelativeLayout RL_listbar;
+    /**
+     * 页面内容
+     */
     @ViewInject(id = R.id.RL_content)
-    RelativeLayout RL_content;
+    private RelativeLayout RL_content;
+    /**
+     * 弟子规内容
+     */
     @ViewInject(id = R.id.textview)
-    TextGroupView textview;
+    private TextGroupView textview;
+    /**
+     * 语音播放
+     */
     @ViewInject(id = R.id.btn_play, click = "onClick")
-    Button btn_play;
+    private Button btn_play;
+    /**
+     * 解释内容
+     */
     @ViewInject(id = R.id.text_ct)
-    MyTextView text_ct;
-
+    private MyTextView text_ct;
+    /**
+     * 目录布局
+     */
     @ViewInject(id = R.id.RL_list)
-    RelativeLayout RL_list;
+    private RelativeLayout RL_list;
     @ViewInject(id = R.id.seekBar)
-    VerticalSeekBar seekbar;
+    private VerticalSeekBar seekbar;
     @ViewInject(id = R.id.list_view)
-    ListView list_view;
+    private ListView list_view;
     @ViewInject(id = R.id.btn_up, click = "onClick")
-    ImageView btn_up;
+    private ImageView btn_up;
     @ViewInject(id = R.id.btn_down, click = "onClick")
-    ImageView btn_down;
-
+    private ImageView btn_down;
+    /**
+     * 翻页按钮
+     */
     @ViewInject(id = R.id.btn_pageleft, click = "onClick")
-    Button btn_pageleft;
+    private Button btn_pageleft;
     @ViewInject(id = R.id.btn_pageright, click = "onClick")
-    Button btn_pageright;
+    private Button btn_pageright;
+
+    private static String RIGHT = "right";
+    private static String LEFT = "left";
+    private static String DOWN = "down";
+    private static String UP = "up";
 
     private DiZiGui dzg;
-    private int pagecount = 0;      //0~89
     private ANLBar anlBar;
     private GestureDetector gestureDetector;
-    private boolean left_right = true;  //left true; right false
-    private boolean flag = false;
-
     private SharedPreferences share_file;
-    String key = "dzg";
-    /*存储的文件名*/
-    public static final String dzg_name = "dzg";
-    /*存储后的文件路径：/date/data/<package name>/share_prefs + 文件名.xml*/
-    public static final String PATH = "/data/data/com.anl.wxb.dzg/shared_prefs/dzg.xml";
-    public String path_share = "/data/data/com.anl.wxb.dzg/shared_prefs/";
-    private String encrypt_s = null;  //保存解密出的数据
     private SweetAlertDialog pDialog;
+    public static final String dzg_name = "dzg";
+    private File file_dzg;
+    private String encrypt_s = null;  //保存解密出的数据
+    private int pagecount = 0;      //0~89
+    private String key = "dzg";
+    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();   //初始化
-        File file_share = new File(path_share);
-        File file_dzg = new File(path_share + "dzg.xml");
-        //隐藏页面布局
-        RL_content.setVisibility(View.INVISIBLE);
-        //加载数据时，显示Loading效果
-        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        showDialog();
+        ifXMLExist();
+        setListener();
+    }
 
-        //dzg.xml存在就读取数据，不存在就下载数据
-        if (file_share.exists()) {
-            if (file_dzg.exists()) {
-                //数据
-                String string = share_file.getString(key, "");
-                new DecryptAsyncTask().execute(string);
-            } else {
-                downData();
-            }
+    /**
+     * 初始化
+     */
+    private void init() {
+        XmppFunc.getInstance().openXmpp(getApplicationContext());
+        share_file = getSharedPreferences(dzg_name, MODE_PRIVATE);
+        btn_pageleft.setVisibility(View.GONE);
+        RL_list.setVisibility(View.GONE);
+        RL_content.setVisibility(View.GONE);
+        file_dzg = new File("/data/data/com.anl.wxb.dzg/shared_prefs/dzg.xml");
+    }
+
+    /**
+     * dzg.xml存在就读取数据，不存在就下载数据
+     */
+    private void ifXMLExist() {
+        if (file_dzg.exists()) {
+            String string = share_file.getString(key, "");
+            new DecryptAsyncTask().execute(string);
         } else {
             downData();
         }
     }
 
     /**
-     * 初始化 xmppfunc,seekbar的thumb位置，左翻按钮初始为隐藏，listview初始为隐藏
+     * 加载数据时，显示Loading效果
      */
-    private void init() {
-        XmppFunc.getInstance().openXmpp(getApplicationContext());
-        // 获取SharePreferences对象
-        share_file = getSharedPreferences(dzg_name, MODE_PRIVATE);
-        btn_pageleft.setVisibility(View.INVISIBLE);
-        RL_list.setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * 下载数据
-     */
-    private void downData() {
-        AnlHttp http = new AnlHttp();
-        http.get("http://api.filialbox.com/api/dizigui", new AjaxCallBack<String>() {
-            @Override
-            public void onSuccess(String s) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(s);
-                    if (jsonObject.getString("code").equals("0")) {
-                        /*首次使用时，若网络较差，下载数据需要时间长*/
-                        pDialog.cancel();
-                        RL_content.setVisibility(View.VISIBLE);
-                        setData(s, pagecount);
-                        //加密数据
-                        new EncryptAsyncTask().execute(s);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setContentText("获取数据失败")
-                            .show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                super.onSuccess(s);
-            }
-
-            @Override
-            public void onFailure(Throwable t, int errorNo, String strMsg) {
-                super.onFailure(t, errorNo, strMsg);
-                /*访问网络失败时，取消加载效果图*/
-                pDialog.cancel();
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setContentText("访问网络错误")
-                        .show();
-            }
-        });
-    }
-
-    /**
-     * 初始化页面数据
-     */
-    private void setData(String s, int pagecount) {
-        dzg = JSON.parseObject(s, DiZiGui.class);
-        MyAdapter myAdapter = new MyAdapter(getApplicationContext(), dzg.getList());
-        list_view.setAdapter(myAdapter);
-        list_view.setSelected(true);
-
-        setListener();
-        contentPage(pagecount);
+    private void showDialog() {
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 
     /**
      * 监听
      */
     private void setListener() {
-        //seekbar滑动监听
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (flag){
-                    int position_seekbar = progress * 81 / 100;
-                    list_view.setSelection(position_seekbar);
+                if (flag) {
+                    list_view.setSelection(progress * 81 / 100);
                 }
             }
 
@@ -219,24 +179,14 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
 
         //设置scrollview 顶部时，往下拉的时候，不现实颜色渐变
         list_view.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        //listview 的点击监听
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 pagecount = position;
                 contentPage(pagecount);
                 list_view.setSelection(pagecount - 3);
-                RL_list.setVisibility(View.INVISIBLE);
-                if (pagecount == 0) {
-                    btn_pageleft.setVisibility(View.INVISIBLE);
-                    btn_pageright.setVisibility(View.VISIBLE);
-                } else if (pagecount == 89) {
-                    btn_pageleft.setVisibility(View.VISIBLE);
-                    btn_pageright.setVisibility(View.INVISIBLE);
-                } else {
-                    btn_pageleft.setVisibility(View.VISIBLE);
-                    btn_pageright.setVisibility(View.VISIBLE);
-                }
+                RL_list.setVisibility(View.GONE);
+                btnPageVisibility(pagecount);
             }
         });
 
@@ -244,35 +194,112 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         list_view.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        break;
-                    default:
-                        break;
-                }
+
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (!flag) {
-                    int position_scroll = firstVisibleItem * 100 / 81;
-                    seekbar.setProgress(position_scroll);
+                    seekbar.setProgress(firstVisibleItem * 100 / 81);
                 }
             }
         });
 
         //手势监听
-        gestureDetector = new GestureDetector(this, new SimpleGestureListener());
+        gestureDetector = new GestureDetector(this, new SimpleGuesture() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                Log.i(">>>", "onFling");
+                if (e1.getX() - e2.getX() > 100 && Math.abs(velocityX) > 100) {
+                    changePage(RIGHT);
+                } else if (e2.getX() - e1.getX() > 100 && Math.abs(velocityX) > 100) {
+                    changePage(LEFT);
+                }
+                return true;
+            }
+        });
         RL_content.setOnTouchListener(this);
     }
 
+    /**
+     * 左右翻页按钮的隐藏，显示
+     *
+     * @param pagecount
+     */
+    private void btnPageVisibility(int pagecount) {
+        if (pagecount == 0) {
+            btn_pageleft.setVisibility(View.GONE);
+            btn_pageright.setVisibility(View.VISIBLE);
+        } else if (pagecount == 89) {
+            btn_pageleft.setVisibility(View.VISIBLE);
+            btn_pageright.setVisibility(View.GONE);
+        } else {
+            btn_pageleft.setVisibility(View.VISIBLE);
+            btn_pageright.setVisibility(View.VISIBLE);
+        }
+    }
 
     /**
-     * 弟子规页面的内容
+     * 下载数据
+     */
+    private void downData() {
+        AnlHttp http = new AnlHttp();
+        http.get("http://api.filialbox.com/api/dizigui", new AjaxCallBack<String>() {
+            @Override
+            public void onSuccess(String s) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(s);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        /*首次使用时，若网络较差，下载数据需要时间长*/
+                        pDialog.cancel();
+                        setData(s, pagecount);
+                        new EncryptAsyncTask().execute(s);
+                    } else {
+                        showErrorDialog("获取数据失败");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                super.onSuccess(s);
+            }
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                super.onFailure(t, errorNo, strMsg);
+                /*访问网络失败时，取消加载效果图*/
+                pDialog.cancel();
+                showErrorDialog("访问网络错误");
+            }
+        });
+    }
+
+    /**
+     * 显示错误的提示信息
+     *
+     * @param str
+     */
+    private void showErrorDialog(String str) {
+        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                .setContentText(str)
+                .show();
+    }
+
+    /**
+     * 设置页面数据
+     */
+    private void setData(String s, int pagecount) {
+        RL_content.setVisibility(View.VISIBLE);
+        dzg = JSON.parseObject(s, DiZiGui.class);
+        DZGAdapter DZGAdapter = new DZGAdapter(getApplicationContext(), dzg.getList());
+        list_view.setAdapter(DZGAdapter);
+        list_view.setSelected(true);
+        contentPage(pagecount);
+    }
+
+    /**
+     * 弟子规页面的内容，自动语音播放
      */
     private void contentPage(int pagecount) {
         DiZiGui.Data data = dzg.getList().get(pagecount);
@@ -286,9 +313,9 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      * 声音播放
      */
     private void soundPlay() {
+        RL_list.setVisibility(View.GONE);
         String string = null;
         String sound = null;
-        RL_list.setVisibility(View.INVISIBLE);
         string = dzg.getList().get(pagecount).hanzi;
         String[] array_sound = string.split("\\s+");
         sound = array_sound[0] + array_sound[1] + array_sound[2] + "，" + array_sound[3] + array_sound[4] + array_sound[5] + "，"
@@ -305,110 +332,89 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      */
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_back:
-            case R.id.text_back:
             case R.id.RL_back:
                 finish();
                 break;
-            case R.id.btn_list:
-            case R.id.text_list:
             case R.id.RL_listbar:
-                if (RL_list.getVisibility() == View.INVISIBLE) {
+                if (RL_list.getVisibility() == View.GONE) {
                     RL_list.setVisibility(View.VISIBLE);
                 } else if (RL_list.getVisibility() == View.VISIBLE) {
-                    RL_list.setVisibility(View.INVISIBLE);
+                    RL_list.setVisibility(View.GONE);
                 }
                 break;
             case R.id.btn_play:
                 soundPlay();
-                new TimeThread().start();
                 break;
             case R.id.btn_up:
-                int position_up = list_view.getFirstVisiblePosition();
-                if (position_up < 8) {
-                    list_view.setSelection(0);
-                } else {
-                    list_view.setSelection(position_up - 8);
-                }
+                pageToUp();
                 break;
             case R.id.btn_down:
-                int position_down = list_view.getFirstVisiblePosition();
-                if (position_down > 81) {
-                    list_view.setSelection(81);
-                } else {
-                    list_view.setSelection(position_down + 8);
-                }
+                pageToDown();
                 break;
             case R.id.btn_pageleft:
-                left_right = true;
-                changePage(left_right);
+                changePage(LEFT);
                 break;
             case R.id.btn_pageright:
-                left_right = false;
-                changePage(left_right);
+                changePage(RIGHT);
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 向下翻页
+     */
+    private void pageToDown() {
+        int position_down = list_view.getFirstVisiblePosition();
+        if (position_down > 81) {
+            list_view.setSelection(81);
+        } else {
+            list_view.setSelection(position_down + 8);
+        }
+    }
+
+    /**
+     * 向上翻页
+     */
+    private void pageToUp() {
+        int position_up = list_view.getFirstVisiblePosition();
+        if (position_up < 8) {
+            list_view.setSelection(0);
+        } else {
+            list_view.setSelection(position_up - 8);
+        }
+    }
 
     /**
      * 翻页处理
      */
-    private void changePage(boolean left_right) {
-        if (left_right) {
-            //如果pagecount = 1,则左翻页按钮隐藏
-            if (pagecount != 0) {
-                pagecount--;
-                contentPage(pagecount);
-                list_view.setSelection(pagecount - 3);
-                if (pagecount == 0) {
-                    btn_pageleft.setVisibility(View.INVISIBLE);
-                } else {
-                    btn_pageleft.setVisibility(View.VISIBLE);
-                }
-                btn_pageright.setVisibility(View.VISIBLE);
-                RL_list.setVisibility(View.INVISIBLE);
-            }
-
-        } else {
-            //如果pagecount=89 ,则右翻页按钮隐藏
-            if (pagecount != 89) {
-                pagecount++;
-                contentPage(pagecount);
-                list_view.setSelection(pagecount - 3);
-                if (pagecount == 89) {
-                    btn_pageright.setVisibility(View.INVISIBLE);
-                } else {
+    private void changePage(String str) {
+        switch (str) {
+            case "left":
+                if (pagecount != 0) {
+                    pagecount--;
+                    contentPage(pagecount);
+                    list_view.setSelection(pagecount - 3);
+                    btnPageVisibility(pagecount);
                     btn_pageright.setVisibility(View.VISIBLE);
+                    RL_list.setVisibility(View.GONE);
                 }
-                btn_pageleft.setVisibility(View.VISIBLE);
-                RL_list.setVisibility(View.INVISIBLE);
-            }
+                break;
+            case "right":
+                if (pagecount != 89) {
+                    pagecount++;
+                    contentPage(pagecount);
+                    list_view.setSelection(pagecount - 3);
+                    btnPageVisibility(pagecount);
+                    btn_pageleft.setVisibility(View.VISIBLE);
+                    RL_list.setVisibility(View.GONE);
+                }
+                break;
+            default:
+                break;
         }
     }
-
-    private class TimeThread extends Thread {
-        public void run() {
-
-            Log.e("MainActivity", "*****TImeThread*****");
-
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                Log.e("run", e.toString());
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        XmppFunc.getInstance().closeXmpp(getApplicationContext());
-    }
-
 
     /**
      * 触摸处理
@@ -417,51 +423,6 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
     }
-
-
-    /**
-     * 手势处理
-     */
-    private class SimpleGestureListener implements GestureDetector.OnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (e1.getX() - e2.getX() > 100 && Math.abs(velocityX) > 100) {
-                left_right = false;
-                changePage(left_right);
-
-            } else if (e2.getX() - e1.getX() > 100 && Math.abs(velocityX) > 100) {
-                left_right = true;
-                changePage(left_right);
-            }
-            return true;
-        }
-    }
-
 
     /**
      * 解密数据 异步处理
@@ -503,8 +464,13 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             pDialog.cancel();
-            RL_content.setVisibility(View.VISIBLE);
             setData(s, pagecount);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        XmppFunc.getInstance().closeXmpp(getApplicationContext());
     }
 }

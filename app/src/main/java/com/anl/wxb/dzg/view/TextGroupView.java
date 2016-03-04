@@ -1,10 +1,9 @@
-package com.anl.wxb.dzg.util;
+package com.anl.wxb.dzg.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
