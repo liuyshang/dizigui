@@ -1,4 +1,4 @@
-package com.anl.wxb.dzg;
+package com.anl.wxb.dzg.entity;
 
 import java.util.List;
 

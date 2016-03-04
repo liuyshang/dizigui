@@ -1,4 +1,4 @@
-package com.anl.wxb.dzg;
+package com.anl.wxb.dzg.aes;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,69 +34,6 @@ public class AESHelper {
         byte[] raw = skey.getEncoded();
         return raw;
     }
-//
-////    源文件 path_encrypt  目的文件 path_decrypt
-//    public void encryptFile(Key sessionKey, String path_encrypt, String path_decrypt) throws Exception{
-//        int len = 0;
-//        byte[] buffer = null;
-//        byte[] cipherbuffer = null;
-//
-////        使用会话密钥对文件加密
-//        Cipher cipher = Cipher.getInstance("AES");
-//        cipher.init(Cipher.ENCRYPT_MODE, sessionKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-//
-//        FileInputStream fis = new FileInputStream(new File(path_encrypt));
-//        FileOutputStream fos = new FileOutputStream(new File(path_decrypt));
-//
-//        len = fis.available();
-//        buffer = new byte[len];
-//        fis.read(buffer);
-//
-//        cipherbuffer = cipher.doFinal(buffer);
-//        fos.write(cipherbuffer);
-//        fos.flush();
-//
-//        if(fis != null){
-//            fis.close();
-//        }
-//        if(fos != null)
-//            fos.close();
-//    }
-//
-////    源文件 path_encrypt  目的文件 path_decrypt
-//    public void descryptFile(Key sessionKey, String path_encrypt, String path_decrypt) throws Exception{
-//        int len = 0;
-//        byte[] buffer = null;
-//        byte[] plainbuffer = null;
-//
-//        Cipher cipher = Cipher.getInstance("AES");
-//        cipher.init(Cipher.DECRYPT_MODE, sessionKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-//
-//
-//        FileInputStream fis = new FileInputStream(new File(path_encrypt));
-//        FileOutputStream fos = new FileOutputStream(new File(path_decrypt));
-//
-////        读取原文，加密并写密文到输出文件
-////        while((len = fis.read(buffer)) != -1){
-////            cipherbuffer = cipher.update(buffer, 0 , len);
-////            fos.write(cipherbuffer);
-////            fos.flush();
-////        }
-//        len = fis.available();
-//        buffer = new byte[len];
-//        fis.read(buffer);
-//
-//        plainbuffer = cipher.doFinal(buffer);
-//        fos.write(plainbuffer);
-//        fos.flush();
-//
-//        if(fis != null){
-//            fis.close();
-//        }
-//        if(fos != null)
-//            fos.close();
-//    }
-
 
 //    加密String cleartext , String Seed
     public static String encrypt(String seed, String cleartext) throws Exception {

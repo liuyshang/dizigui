@@ -19,7 +19,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="di" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi1"
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin1"
-                android:text="弟" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -42,7 +42,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="zi" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi2"
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin2"
-                android:text="子" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -65,7 +65,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="gui" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi3"
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin3"
-                android:text="规" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -95,7 +95,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="sheng" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi4"
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin4"
-                android:text="圣" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -118,7 +118,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ren" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi5"
@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin5"
-                android:text="人" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -141,7 +141,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="xun" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi6"
@@ -149,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin6"
-                android:text="训" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -172,7 +172,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="shou" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi7"
@@ -180,7 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin7"
-                android:text="首" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -195,7 +195,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="xiao" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi8"
@@ -203,7 +203,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin8"
-                android:text="孝" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -218,7 +218,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ti" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi9"
@@ -226,7 +226,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin9"
-                android:text="悌" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -248,7 +248,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ci" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi10"
@@ -256,7 +256,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin10"
-                android:text="次" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -271,7 +271,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="jin" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi11"
@@ -279,7 +279,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin11"
-                android:text="谨" />
+                android:text="" />
 
         </RelativeLayout>
 
@@ -294,7 +294,7 @@
                 style="@style/dzg_pinyin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="xin" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/hanzi12"
@@ -302,7 +302,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pinyin12"
-                android:text="信" />
+                android:text="" />
 
         </RelativeLayout>
 

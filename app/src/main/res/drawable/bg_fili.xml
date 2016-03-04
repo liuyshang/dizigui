@@ -3,51 +3,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--背景图-->
-    <item android:drawable="@drawable/bg_fili_progress" android:id="@+id/background"/>
+    <item
+        android:id="@+id/background"
+        android:drawable="@drawable/bg_fili_progress" />
     <!--进度图-->
-    <item android:drawable="@drawable/bg_fili_progress" android:id="@+id/progress"/>
+    <item
+        android:id="@+id/progress"
+        android:drawable="@drawable/bg_fili_progress" />
 
-        <!--<item android:id="@android:id/background">-->
-            <!--<shape>-->
-                <!--<corners android:radius="5dip" />-->
-                <!--<gradient-->
-                    <!--android:startColor="#984715"-->
-                    <!--android:centerColor="#984715"-->
-                    <!--android:centerY="0.75"-->
-                    <!--android:endColor="#984715"-->
-                    <!--android:angle="270"-->
-                    <!--/>-->
-            <!--</shape>-->
-        <!--</item>-->
-
-        <!--<item android:id="@android:id/secondaryProgress">-->
-            <!--<clip>-->
-                <!--<shape>-->
-                    <!--<corners android:radius="5dip" />-->
-                    <!--<gradient-->
-                        <!--android:startColor="#984715"-->
-                        <!--android:centerColor="#984715"-->
-                        <!--android:centerY="0.75"-->
-                        <!--android:endColor="#984715"-->
-                        <!--android:angle="270"-->
-                        <!--/>-->
-                <!--</shape>-->
-            <!--</clip>-->
-        <!--</item>-->
-
-        <!--<item android:id="@android:id/progress">-->
-            <!--<clip>-->
-                <!--<shape>-->
-                    <!--<corners android:radius="5dip" />-->
-                    <!--<gradient-->
-                        <!--android:startColor="#984715"-->
-                        <!--android:centerColor="#984715"-->
-                        <!--android:centerY="0.75"-->
-                        <!--android:endColor="#984715"-->
-                        <!--android:angle="270"-->
-                        <!--/>-->
-                <!--</shape>-->
-            <!--</clip>-->
-        <!--</item>-->
-
-    </layer-list>
+</layer-list>

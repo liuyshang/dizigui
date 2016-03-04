@@ -1,4 +1,4 @@
-package com.anl.wxb.dzg;
+package com.anl.wxb.dzg.util;
 
 import android.content.Context;
 import android.graphics.Canvas;
