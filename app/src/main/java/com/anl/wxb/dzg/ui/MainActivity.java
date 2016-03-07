@@ -1,13 +1,18 @@
 package com.anl.wxb.dzg.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,7 +21,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
-import com.alibaba.fastjson.JSON;
 import com.anl.base.AnlActivity;
 import com.anl.base.AnlHttp;
 import com.anl.base.annotation.view.ViewInject;
@@ -25,17 +29,17 @@ import com.anl.wxb.ability.ANLBar;
 import com.anl.wxb.ability.XmppFunc;
 import com.anl.wxb.dzg.R;
 import com.anl.wxb.dzg.adapter.DZGAdapter;
-import com.anl.wxb.dzg.entity.DiZiGui;
+import com.anl.wxb.dzg.bean.DiZiGui;
 import com.anl.wxb.dzg.util.AESHelper;
 import com.anl.wxb.dzg.util.SimpleGuesture;
 import com.anl.wxb.dzg.view.MyTextView;
 import com.anl.wxb.dzg.view.TextGroupView;
 import com.anl.wxb.dzg.view.VerticalSeekBar;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -55,7 +59,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      * 页面内容
      */
     @ViewInject(id = R.id.RL_content)
-    private RelativeLayout RL_content;
+    private RelativeLayout rlContent;
     /**
      * 弟子规内容
      */
@@ -92,21 +96,20 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     @ViewInject(id = R.id.btn_pageright, click = "onClick")
     private Button btn_pageright;
 
-    private static String RIGHT = "right";
-    private static String LEFT = "left";
-    private static String DOWN = "down";
-    private static String UP = "up";
+    private static final String RIGHT = "right";
+    private static final String LEFT = "left";
+    private static final String DOWN = "down";
+    private static final String UP = "up";
+    public static final String NAME = "dzg";
+    private static final String KEY = "dzg";
 
-    private DiZiGui dzg;
-    private ANLBar anlBar;
+    private Context mContext;
+    private List<DiZiGui.ListEntity> listDZG = new ArrayList<>();
     private GestureDetector gestureDetector;
     private SharedPreferences share_file;
-    private SweetAlertDialog pDialog;
-    public static final String dzg_name = "dzg";
+    private SweetAlertDialog mDialog;
     private File file_dzg;
-    private String encrypt_s = null;  //保存解密出的数据
     private int pagecount = 0;      //0~89
-    private String key = "dzg";
     private boolean flag = false;
 
     @Override
@@ -123,11 +126,12 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      * 初始化
      */
     private void init() {
+        mContext = MainActivity.this;
         XmppFunc.getInstance().openXmpp(getApplicationContext());
-        share_file = getSharedPreferences(dzg_name, MODE_PRIVATE);
+        share_file = getSharedPreferences(NAME, MODE_PRIVATE);
         btn_pageleft.setVisibility(View.GONE);
         RL_list.setVisibility(View.GONE);
-        RL_content.setVisibility(View.GONE);
+        rlContent.setVisibility(View.GONE);
         file_dzg = new File("/data/data/com.anl.wxb.dzg/shared_prefs/dzg.xml");
     }
 
@@ -136,7 +140,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      */
     private void ifXMLExist() {
         if (file_dzg.exists()) {
-            String string = share_file.getString(key, "");
+            String string = share_file.getString(KEY, "");
             new DecryptAsyncTask().execute(string);
         } else {
             downData();
@@ -147,11 +151,11 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      * 加载数据时，显示Loading效果
      */
     private void showDialog() {
-        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        mDialog.setTitleText("Loading");
+        mDialog.setCancelable(false);
+        mDialog.show();
     }
 
     /**
@@ -209,16 +213,15 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         gestureDetector = new GestureDetector(this, new SimpleGuesture() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                Log.i(">>>", "onFling");
                 if (e1.getX() - e2.getX() > 100 && Math.abs(velocityX) > 100) {
-                    changePage(RIGHT);
+                    addAnimation(RIGHT);
                 } else if (e2.getX() - e1.getX() > 100 && Math.abs(velocityX) > 100) {
-                    changePage(LEFT);
+                    addAnimation(LEFT);
                 }
                 return true;
             }
         });
-        RL_content.setOnTouchListener(this);
+        rlContent.setOnTouchListener(this);
     }
 
     /**
@@ -247,20 +250,16 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         http.get("http://api.filialbox.com/api/dizigui", new AjaxCallBack<String>() {
             @Override
             public void onSuccess(String s) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(s);
-                    String code = jsonObject.optString("code");
-                    if (code.equals("0")) {
-                        /*首次使用时，若网络较差，下载数据需要时间长*/
-                        pDialog.cancel();
-                        setData(s, pagecount);
-                        new EncryptAsyncTask().execute(s);
-                    } else {
-                        showErrorDialog("获取数据失败");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                Gson gson = new Gson();
+                DiZiGui diZiGui = gson.fromJson(s, DiZiGui.class);
+                String code = String.valueOf(diZiGui.getCode());
+                if (code.equals("0")) {
+                    mDialog.cancel();
+                    listDZG = diZiGui.getList();
+                    setData(listDZG, pagecount);
+                    new EncryptAsyncTask().execute(s);
+                } else {
+                    showErrorDialog("获取数据失败");
                 }
                 super.onSuccess(s);
             }
@@ -269,7 +268,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
             public void onFailure(Throwable t, int errorNo, String strMsg) {
                 super.onFailure(t, errorNo, strMsg);
                 /*访问网络失败时，取消加载效果图*/
-                pDialog.cancel();
+                mDialog.cancel();
                 showErrorDialog("访问网络错误");
             }
         });
@@ -289,10 +288,9 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     /**
      * 设置页面数据
      */
-    private void setData(String s, int pagecount) {
-        RL_content.setVisibility(View.VISIBLE);
-        dzg = JSON.parseObject(s, DiZiGui.class);
-        DZGAdapter DZGAdapter = new DZGAdapter(getApplicationContext(), dzg.getList());
+    private void setData(List<DiZiGui.ListEntity> list, int pagecount) {
+        rlContent.setVisibility(View.VISIBLE);
+        DZGAdapter DZGAdapter = new DZGAdapter(mContext, list);
         list_view.setAdapter(DZGAdapter);
         list_view.setSelected(true);
         contentPage(pagecount);
@@ -302,11 +300,32 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
      * 弟子规页面的内容，自动语音播放
      */
     private void contentPage(int pagecount) {
-        DiZiGui.Data data = dzg.getList().get(pagecount);
-        textview.setPinyin(data.pinyin);
-        textview.setHanzi(data.hanzi);
-        text_ct.setText(data.jieshi);
-        soundPlay();
+        final DiZiGui.ListEntity entity = listDZG.get(pagecount);
+        ValueAnimator animator = ValueAnimator.ofFloat(0.3f, 1.0f).setDuration(1000);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                textview.setAlpha((Float) animation.getAnimatedValue());
+                text_ct.setAlpha((Float) animation.getAnimatedValue());
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                textview.setPinyin(entity.getPinyin());
+                textview.setHanzi(entity.getHanzi());
+                text_ct.setText(entity.getJieshi());
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                soundPlay();
+            }
+        });
+        animator.start();
     }
 
     /**
@@ -316,11 +335,11 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         RL_list.setVisibility(View.GONE);
         String string = null;
         String sound = null;
-        string = dzg.getList().get(pagecount).hanzi;
+        string = listDZG.get(pagecount).getHanzi();
         String[] array_sound = string.split("\\s+");
         sound = array_sound[0] + array_sound[1] + array_sound[2] + "，" + array_sound[3] + array_sound[4] + array_sound[5] + "，"
                 + array_sound[6] + array_sound[7] + array_sound[8] + "，" + array_sound[9] + array_sound[10] + array_sound[11];
-        anlBar = new ANLBar(sound, "", "", "", null, null, null);
+        ANLBar anlBar = new ANLBar(sound, "", "", "", null, null, null);
         anlBar.setShowwindow(0);
         anlBar.setPlaysound(1);
         anlBar.setSpeakspeed("5");
@@ -352,14 +371,54 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 pageToDown();
                 break;
             case R.id.btn_pageleft:
-                changePage(LEFT);
+                addAnimation(LEFT);
                 break;
             case R.id.btn_pageright:
-                changePage(RIGHT);
+                addAnimation(RIGHT);
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 添加动画
+     *
+     * @param str
+     */
+    private void addAnimation(final String str) {
+        ValueAnimator animator = ValueAnimator.ofFloat(1.0f, 0.7f)
+                .setDuration(160);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                rlContent.setAlpha((float) Math.pow(value, 4));
+                rlContent.setScaleX(value);
+                rlContent.setScaleY(value);
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                changePage(str);
+            }
+        });
+        ValueAnimator animator1 = ValueAnimator.ofFloat(0.7f, 1.0f)
+                .setDuration(700);
+        animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                rlContent.setAlpha((float) Math.pow(value, 4));
+                rlContent.setScaleX(value);
+                rlContent.setScaleY(value);
+            }
+        });
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(animator, animator1);
+        set.start();
     }
 
     /**
@@ -442,9 +501,9 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //      获取Editor对象
+            //获取Editor对象
             SharedPreferences.Editor editor = share_file.edit();
-            editor.putString(key, s);
+            editor.putString(KEY, s);
             editor.apply();
         }
     }
@@ -452,6 +511,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     private class DecryptAsyncTask extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... params) {
+            String encrypt_s = null;
             try {
                 encrypt_s = new AESHelper().decrypt("aes", params[0]);
             } catch (Exception e) {
@@ -463,8 +523,11 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pDialog.cancel();
-            setData(s, pagecount);
+            mDialog.cancel();
+            Gson gson = new Gson();
+            DiZiGui diZiGui = gson.fromJson(s, DiZiGui.class);
+            listDZG = diZiGui.getList();
+            setData(listDZG, pagecount);
         }
     }
 

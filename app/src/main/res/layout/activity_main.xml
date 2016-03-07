@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:id="@+id/RL_actionbar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_actionbar">
 
@@ -83,8 +83,8 @@
 
     <RelativeLayout
         android:id="@+id/RL_bg"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/RL_actionbar"
         android:background="@drawable/bg_activity">
 
@@ -93,24 +93,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="100dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/bg_content">
 
             <ImageView
                 android:id="@+id/iv_center"
                 android:layout_width="1dp"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:background="@color/dizigui"
                 android:visibility="invisible" />
 
             <RelativeLayout
                 android:id="@+id/RL_leftct"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/iv_center">
 
                 <TextView
@@ -144,8 +144,8 @@
 
             <RelativeLayout
                 android:id="@+id/RL_rightct"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_toRightOf="@id/iv_center">
 
                 <TextView
@@ -158,18 +158,24 @@
                     android:textColor="@color/explain"
                     android:textSize="26sp" />
 
-                <com.anl.wxb.dzg.view.MyTextView
-                    android:id="@+id/text_ct"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_alignLeft="@id/text_el"
                     android:layout_below="@id/text_el"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="50dp"
-                    android:layout_marginTop="10dp"
-                    android:lineSpacingExtra="10sp"
-                    android:textColor="@color/content"
-                    android:textSize="24sp" />
+                    android:layout_marginTop="10dp">
+
+                    <com.anl.wxb.dzg.view.MyTextView
+                        android:id="@+id/text_ct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.5"
+                        android:textColor="@color/content"
+                        android:textSize="26sp" />
+
+                </ScrollView>
 
             </RelativeLayout>
 

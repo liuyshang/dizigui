@@ -28,6 +28,8 @@ def getVersionName = { ->
     }
 }
 
+
+
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -57,4 +59,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.anl.sdk:sweetalertdialog:1.0.8@aar'
     compile 'com.anl.sdk:anlability:1.+@aar'
+    compile 'com.google.code.gson:gson:2.6.2'
 }

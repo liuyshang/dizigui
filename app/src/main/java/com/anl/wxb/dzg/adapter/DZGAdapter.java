@@ -7,9 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.anl.wxb.dzg.entity.DiZiGui;
+import com.anl.wxb.dzg.bean.DiZiGui;
 import com.anl.wxb.dzg.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +19,9 @@ import java.util.List;
 public class DZGAdapter extends BaseAdapter {
 
     public Context mContext;
-    public List<DiZiGui.Data> mList = null;
+    public List<DiZiGui.ListEntity> mList = new ArrayList<>();
 
-    public DZGAdapter(Context mContext, List<DiZiGui.Data> mList) {
+    public DZGAdapter(Context mContext, List<DiZiGui.ListEntity> mList) {
         super();
         this.mContext = mContext;
         this.mList = mList;
@@ -55,11 +56,11 @@ public class DZGAdapter extends BaseAdapter {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
-        DiZiGui.Data data = mList.get(position);
+        DiZiGui.ListEntity entity = mList.get(position);
         if (position < 9) {
-            mViewHolder.text_ct.setText(" " + (position + 1) + " ." + data.hanzi.replaceAll(" +", ""));
+            mViewHolder.text_ct.setText(" " + (position + 1) + " ." + entity.getHanzi().replaceAll(" +", ""));
         } else {
-            mViewHolder.text_ct.setText("" + (position + 1) + " ." + data.hanzi.replaceAll(" +", ""));
+            mViewHolder.text_ct.setText("" + (position + 1) + " ." + entity.getHanzi().replaceAll(" +", ""));
         }
         return convertView;
     }
