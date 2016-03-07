@@ -56,6 +56,11 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     @ViewInject(id = R.id.RL_listbar, click = "onClick")
     private RelativeLayout RL_listbar;
     /**
+     * 页面
+     */
+    @ViewInject(id = R.id.RL_bg)
+    private RelativeLayout rlBg;
+    /**
      * 页面内容
      */
     @ViewInject(id = R.id.RL_content)
@@ -111,6 +116,7 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
     private File file_dzg;
     private int pagecount = 0;      //0~89
     private boolean flag = false;
+    private boolean flagMove = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,10 +219,12 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
         gestureDetector = new GestureDetector(this, new SimpleGuesture() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                if (e1.getX() - e2.getX() > 100 && Math.abs(velocityX) > 100) {
-                    addAnimation(RIGHT);
-                } else if (e2.getX() - e1.getX() > 100 && Math.abs(velocityX) > 100) {
-                    addAnimation(LEFT);
+                if (flagMove) {
+                    if (e1.getX() - e2.getX() > 100 && Math.abs(velocityX) > 100) {
+                        addAnimation(RIGHT);
+                    } else if (e2.getX() - e1.getX() > 100 && Math.abs(velocityX) > 100) {
+                        addAnimation(LEFT);
+                    }
                 }
                 return true;
             }
@@ -404,6 +412,14 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 super.onAnimationEnd(animation);
                 changePage(str);
             }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                btn_pageright.setClickable(false);
+                btn_pageleft.setClickable(false);
+                flagMove = false;
+            }
         });
         ValueAnimator animator1 = ValueAnimator.ofFloat(0.7f, 1.0f)
                 .setDuration(700);
@@ -414,6 +430,15 @@ public class MainActivity extends AnlActivity implements View.OnTouchListener {
                 rlContent.setAlpha((float) Math.pow(value, 4));
                 rlContent.setScaleX(value);
                 rlContent.setScaleY(value);
+            }
+        });
+        animator1.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                btn_pageleft.setClickable(true);
+                btn_pageright.setClickable(true);
+                flagMove = true;
             }
         });
         AnimatorSet set = new AnimatorSet();

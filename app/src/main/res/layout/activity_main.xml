@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -86,7 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/RL_actionbar"
-        android:background="@drawable/bg_activity">
+        android:background="@drawable/bg_activity"
+        android:clipChildren="false">
 
         <RelativeLayout
             android:id="@+id/RL_content"
@@ -158,24 +159,18 @@
                     android:textColor="@color/explain"
                     android:textSize="26sp" />
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <com.anl.wxb.dzg.view.MyTextView
+                    android:id="@+id/text_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/text_el"
                     android:layout_below="@id/text_el"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="50dp"
-                    android:layout_marginTop="10dp">
-
-                    <com.anl.wxb.dzg.view.MyTextView
-                        android:id="@+id/text_ct"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingMultiplier="1.5"
-                        android:textColor="@color/content"
-                        android:textSize="26sp" />
-
-                </ScrollView>
+                    android:layout_marginTop="10dp"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textColor="@color/content"
+                    android:textSize="26sp" />
 
             </RelativeLayout>
 
@@ -246,8 +241,8 @@
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:thumb="@drawable/btn_progress"
                 android:progressDrawable="@drawable/bg_fili"
+                android:thumb="@drawable/btn_progress"
                 app:seekBarRotation="CW90" />
         </com.anl.wxb.dzg.view.VerticalSeekBarWrapper>
 
